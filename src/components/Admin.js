@@ -1,62 +1,47 @@
-import React ,{useState,useEffect} from 'react'
-import { FaAngleDoubleRight } from 'react-icons/fa';
-
-export default function Admin() {
-  const[loading,setLoading]=useState(true);
-  const [jobs, setJobs] = useState([]);
-  const[value,setValue]=useState(0);
- 
-  async function fetchPagesAPI() {
-    const page = await fetch("http://localhost:4500/jobs");
-    const response = await page.json();
-    setJobs(response);
-    setLoading(false)
-
-  }
-  useEffect(() => {
-     fetchPagesAPI();
-  }, [])
-  if(loading){
-    return(
-      <section className='section loading'>
-        <h1>loading...</h1>
-      </section>
-    )
-  }
-  const{company,dates,duties,title}=jobs[value]
+import React, { useState } from "react";
+import axios from "axios";
+export default function Admin({ setLoggedIn }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const { data } = await axios.post("http://localhost:4500/login", {
+        email,
+        password,
+      });
+      if (data) {
+        setLoggedIn(true);
+      }
+    } catch ({ message }) {
+      console.warn({ error: message });
+    }
+  };
   return (
-    <div>
-        <section className='section'>
-      <div className='title'>
-        <h1>Experience</h1>
-        <div className='underline'></div>
+    <div className="d-flex vh-100 justify-content-center align-items-center bg-primary">
+      <div className="p-3 bg-white w-25">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              placeholder="Enter Email"
+              className="form-control"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              placeholder="Enter Password"
+              className="form-control"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <button className="btn btn-success">Login</button>
+        </form>
       </div>
-      <div className='jobs-center'>
-        <div className='btn-container'>
-           {jobs.map((job,index)=>{
-
-            return <button key={job.id} onClick={()=>setValue(index)} className={`job-btn ${value===index} && acive-btn`}>
-              {job.company}</button>
-           })}
-        </div>
-        <article className='job-info'>
-          <h3>{title}</h3>
-          <h4>{company}</h4>
-          <p className='job-date'>{dates}</p>
-          {
-            duties.map((duty,index)=>{
-              return (
-                <div key={index} className='job-desc'>
-                   <FaAngleDoubleRight className="job-icon"></FaAngleDoubleRight>
-                   <p>{duty}</p>
-                </div>
-              )
-            })
-          }
-        </article>
-      </div>
-    </section>
-
     </div>
-  )
+  );
 }
