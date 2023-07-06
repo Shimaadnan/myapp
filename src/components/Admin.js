@@ -27,6 +27,7 @@ export default function Admin({ setLoggedIn }) {
               type="email"
               placeholder="Enter Email"
               className="form-control"
+              data-cy="emailInputField"
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -36,6 +37,7 @@ export default function Admin({ setLoggedIn }) {
               type="password"
               placeholder="Enter Password"
               className="form-control"
+              data-cy="passWordInputField"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
