@@ -23,6 +23,7 @@ export default function Jobs({loggedIn}) {
       </section>
     )
   }
+  // deconstract the object
   const{company,dates,duties,title}=jobs[value]
   
   return (
